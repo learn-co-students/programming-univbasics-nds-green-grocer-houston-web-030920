@@ -11,7 +11,7 @@ describe "Grocer" do
       {:item => "BEER", :price => 13.00, :clearance => false},
       {:item => "PEANUTBUTTER", :price => 3.00, :clearance => true},
       {:item => "BEETS", :price => 2.50, :clearance => false},
-      {:item => "SOY MILK", :price => 4.50, :clearance => true}
+      {:item => "SOY MILK", :price => 4.50, :clearance => true},
     ]
   end
 
