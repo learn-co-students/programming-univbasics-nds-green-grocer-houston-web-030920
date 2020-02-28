@@ -39,31 +39,37 @@ def apply_coupons(cart, coupons)
   
   hash_with_coupon = {}
   
-  
-  
-  cart.each do |item_hash| 
-    coupons.each do |coupon|
-      rounded_price = (coupon[:cost]/coupon[:num]).round(2)
-      hash_with_coupon[:item] = "#{coupon[:item]} W/COUPONS"
-      hash_with_coupon[:price] = rounded_price
-      hash_with_coupon[:count] = coupon[:num]
-      
-      item_hash[:count] -= coupon[:num]
-      hash_with_coupon[:clearance] = item_hash[:clearance]
-      
-    end
+  coupons.each do |coupon|
+    item_in_cart = find_item_by_name_in_collection(coupon[:item], cart)
+    hash_with_coupon[:item] = "#{coupon[:item]} W/COUPON"
+    hash_with_coupon[:price] = (coupon[:cost]/coupon[:num]).round(2)
     
+    if item_in_cart[:count] / coupon[:num] >= 1 
+      hash_with_coupon[:clearance] = item_in_cart[:clearance]
+      hash_with_coupon[:count] = item_in_cart[:count] - (item_in_cart[:count] % coupon[:num])
+      
+      cart << hash_with_coupon
+      item_in_cart[:count] %= coupon[:num]
+    end
   end
-  cart << hash_with_coupon
-  binding.pry
+  cart
 end
 
 #------------------------------
 
 def apply_clearance(cart)
-  # Consult README for inputs and outputs
-  #
-  # REMEMBER: This method **should** update cart
+  
+  item_clearance = []
+  
+  cart.each do |item|
+    if item[:clearance]
+      item[:price] = item[:price] - (item[:price] * 0.20).round(2)
+    end 
+    item_clearance << item
+  end 
+  
+  item_clearance
+  
 end
 
 #------------------------------
@@ -78,4 +84,24 @@ def checkout(cart, coupons)
   #
   # BEFORE it begins the work of calculating the total (or else you might have
   # some irritated customers
+  
+  
+  
+  consolidated_cart = consolidate_cart(cart)
+  coupon_item = apply_coupons(consolidated_cart, coupons)
+  clearance_item = apply_clearance(coupon_item)
+  
+  grand_total = 0 
+  
+  clearance_item.each do |item|
+    item_total = (item[:price] * item[:count].round(2))
+    grand_total += item_total
+  end
+  
+  if grand_total > 100
+    grand_total -= (grand_total * 0.10).round(2)
+  end 
+  
+  grand_total
+  
 end
