@@ -39,38 +39,23 @@ def apply_coupons(cart, coupons)
   # Consult README for inputs and outputs
   #
   # REMEMBER: This method **should** update cart
-   
-  # cart_with_coupons = consolidate_cart(cart)
   
-  # cart_with_coupons.each do |item_hash|
-  #   if coupons[0][:item] == item_hash[:item] && item_hash[:count] >= coupons[0][:num]
-  #     coupons[0][:item] = "#{coupons[0][:item]} W/COUPONS"
-  #     coupons[0][:price] = coupons[0][:cost]/coupons[0][:num]
-  #     coupons[0][:clearance] = item_hash[:clearance]
-  #     coupons[0][:count] = item_hash[:count]
-  #     item_hash[:count] -= coupons[0][:num]
-      
-  #   end 
-  #   
-  # end 
-  
-  
+  hash_with_coupon = {}
   coupons.each do |coupon|
     item_name = coupon[:item]
     cart.each do |item|
       if item[:item] == item_name && item[:count] >= coupon[:num]
-        hash_with_coupon = {}
-        
         hash_with_coupon[:item] = "#{coupon[:item]} W/COUPONS"
         hash_with_coupon[:price] = coupon[:cost]/coupon[:num]
         hash_with_coupon[:clearance] = item[:clearance]
         hash_with_coupon[:count] = item[:count]
         item[:count] -= coupon[:num]
-        
-        binding.pry
       end 
     end
+    binding.pry
   end
+  cart << hash_with_coupon
+  
 end
 
 #------------------------------
