@@ -36,26 +36,26 @@ end
 
 
 def apply_coupons(cart, coupons)
-  # Consult README for inputs and outputs
-  #
-  # REMEMBER: This method **should** update cart
   
   hash_with_coupon = {}
-  coupons.each do |coupon|
-    item_name = coupon[:item]
-    cart.each do |item|
-      if item[:item] == item_name && item[:count] >= coupon[:num]
-        hash_with_coupon[:item] = "#{coupon[:item]} W/COUPONS"
-        hash_with_coupon[:price] = coupon[:cost]/coupon[:num]
-        hash_with_coupon[:clearance] = item[:clearance]
-        hash_with_coupon[:count] = item[:count]
-        item[:count] -= coupon[:num]
-      end 
+  
+  
+  
+  cart.each do |item_hash| 
+    coupons.each do |coupon|
+      rounded_price = (coupon[:cost]/coupon[:num]).round(2)
+      hash_with_coupon[:item] = "#{coupon[:item]} W/COUPONS"
+      hash_with_coupon[:price] = rounded_price
+      hash_with_coupon[:count] = coupon[:num]
+      
+      item_hash[:count] -= coupon[:num]
+      hash_with_coupon[:clearance] = item_hash[:clearance]
+      
     end
-    binding.pry
+    
   end
   cart << hash_with_coupon
-  
+  binding.pry
 end
 
 #------------------------------
